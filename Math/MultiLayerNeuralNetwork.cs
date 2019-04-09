@@ -29,7 +29,7 @@ namespace MNistClassifier.Math
             }
         }
 
-        private int[] layerNodeCounts;
+        public readonly int[] layerNodeCounts;
         private Layer[] layers;
 
         private double learningRate;
@@ -220,7 +220,7 @@ namespace MNistClassifier.Math
             var root = xml.Root;
 
             // get the layer count array
-            var layerCounts = root.Element("LayerCounts").Elements("LayerCount").Select(e => int.Parse(e.Value)).ToArray();
+            var layerCounts = root.Element("LayerCounts").Elements("LayerNodeCount").Select(e => int.Parse(e.Value)).ToArray();
 
             var network = new MultiLayerNeuralNetwork(layerCounts);
 
@@ -236,8 +236,8 @@ namespace MNistClassifier.Math
                 
             for (int i = 0; i < layerElements.Length; i++)
             {
-                var weights = Matrix.FromXElement(layerElements[i].Element("Weights"));
-                var bias = Matrix.FromXElement(layerElements[i].Element("Bias"));
+                var weights = Matrix.FromXElement(layerElements[i].Element("Weights").Element("Matrix"));
+                var bias = Matrix.FromXElement(layerElements[i].Element("Bias").Element("Matrix"));
                 network.layers[i] = new Layer(weights, bias);            
             }
 

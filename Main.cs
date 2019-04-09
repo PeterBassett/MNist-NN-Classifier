@@ -76,9 +76,16 @@ namespace MNistClassifier
                 switch (type)
                 {
                     case "NeuralNetwork":
+                        rdoSimple.Checked = true;
                         return NeuralNetwork.FromXml(document);
                     case "MultiLayerNeuralNetwork":
-                        return MultiLayerNeuralNetwork.FromXml(document);
+                        
+                        rdoComplex.Checked = true;
+                        var network = MultiLayerNeuralNetwork.FromXml(document);
+
+                        txtLayerCounts.Text = string.Join(", ", network.layerNodeCounts.Select(c => c.ToString()));
+
+                        return network;
                     default:
                         throw new ArgumentNullException("Must provide Value Network Type"); ;
                 }
@@ -88,10 +95,13 @@ namespace MNistClassifier
                 switch (type)
                 {
                     case "NeuralNetwork":
+                        rdoSimple.Checked = true;
                         return new NeuralNetwork(inputCount, hiddenCount, outputCount);
                     case "MultiLayerNeuralNetwork":
                         {
                             var layerCounts = ParseLayerCounts();
+                            rdoComplex.Checked = true;
+
                             return new MultiLayerNeuralNetwork(layerCounts);
                         }
                     default:
